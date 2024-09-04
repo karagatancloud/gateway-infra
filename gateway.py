@@ -88,6 +88,7 @@ entry_t = """
       certificateRefs:
       - kind: Secret
         name: ${domain}-tls
+        namespace: gateway-infra
     allowedRoutes:
       kinds:
       - kind: HTTPRoute
@@ -105,6 +106,7 @@ entry_t = """
       certificateRefs:
       - kind: Secret
         name: ${domain}-tls
+        namespace: gateway-infra
     allowedRoutes:
       kinds:
       - kind: HTTPRoute
