@@ -195,7 +195,7 @@ def generate(args):
         data["api_token"] = api_token
 
 
-    domain_list = args.domain_list
+    domain_list = args.domains
     if domain_list == None:
         domain_list = input("Enter comma separated domain list: ")
     domain_list = parse_tokens(domain_list)
@@ -213,7 +213,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='Gateway',
                     description='Gateway-infra gateway generator',
                     epilog='Copyright (C) Karagatan, LLC.')
-    parser.add_argument("--domain_list", type=str, help='comma separated domain list')
+    parser.add_argument("--domains", type=str, help='comma separated domain list')
     parser.add_argument("--resources", type=str, default='namespace,secret,issuer,certificates,gateway', help='generate type of resource')
     parser.add_argument("--email", type=str, help='email for ACME account')
     parser.add_argument("--api_token", type=str, help='API-TOKEN from Cloudflare account')
