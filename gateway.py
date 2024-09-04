@@ -84,6 +84,7 @@ entry_t = """
     port: 443
     hostname: "*.${domain}"
     tls:
+      mode: Terminate
       certificateRefs:
       - kind: Secret
         name: ${domain}-tls
@@ -100,6 +101,7 @@ entry_t = """
     port: 443
     hostname: "${domain}"
     tls:
+      mode: Terminate
       certificateRefs:
       - kind: Secret
         name: ${domain}-tls
