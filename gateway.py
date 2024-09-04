@@ -194,11 +194,13 @@ def generate(args):
             api_token = input("Enter API-TOKEN of Cloudflare account: ")
         data["api_token"] = api_token
 
-
-    domain_list = args.domains
-    if domain_list == None:
-        domain_list = input("Enter comma separated domain list: ")
-    domain_list = parse_tokens(domain_list)
+    domain_list = []
+    
+    if "certificates" in resources or "gateway" in resources:
+        domain_list = args.domains
+        if domain_list == None:
+            domain_list = input("Enter comma separated domain list: ")
+        domain_list = parse_tokens(domain_list)
 
     outputFile = args.o
     if outputFile != None:
