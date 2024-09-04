@@ -58,7 +58,7 @@ metadata:
   labels:
     app: default-app
   name: default-app
-  namespace: prod-karagatan-com
+  namespace: ${cos}-${sanitized_name}
 spec:
   replicas: 1
   selector:
