@@ -55,9 +55,6 @@ deployment_t = """
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-  generation: 1
   labels:
     app: default-app
   name: default-app
