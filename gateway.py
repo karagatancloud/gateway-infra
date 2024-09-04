@@ -183,19 +183,20 @@ def generate(args):
 
     resources = parse_tokens(args.resources)
 
-    if "secret" in resources:
+    if "issuer" in resources:
         email = args.email
         if email == None:
             email = input("Enter email for ACME account: ")
         data["email"] = email
 
+    if "secret" in resources:
         api_token = args.api_token
         if api_token == None:
             api_token = input("Enter API-TOKEN of Cloudflare account: ")
         data["api_token"] = api_token
 
     domain_list = []
-    
+
     if "certificates" in resources or "gateway" in resources:
         domain_list = args.domains
         if domain_list == None:
