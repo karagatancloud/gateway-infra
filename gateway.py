@@ -1,5 +1,6 @@
 from string import Template
 import argparse
+import pyunycode
 
 separator = "---"
 
@@ -79,7 +80,7 @@ spec:
 """
 
 entry_t = """
-  - name: https-w-${sanitized_name}
+  - name: https-w-${sanitized_domain}
     protocol: HTTPS
     port: 443
     hostname: "*.${domain}"
@@ -96,8 +97,8 @@ entry_t = """
         from: Selector
         selector:
           matchLabels:
-            project: ${sanitized_name}
-  - name: https-${sanitized_name}
+            project: ${sanitized_domain}
+  - name: https-${sanitized_domain}
     protocol: HTTPS
     port: 443
     hostname: "${domain}"
@@ -114,7 +115,7 @@ entry_t = """
         from: Selector
         selector:
           matchLabels:
-            project: ${sanitized_name}
+            project: ${sanitized_domain}
 """
 
 def format(tmpl, **kwargs):
@@ -136,13 +137,18 @@ def gen_issuer(domain_list, data):
 def gen_certificates(domain_list, data):
     for domain in domain_list:
         if domain != "":
+            domain = pyunycode.convert(domain)
             yield format(certificate_t, domain=domain)
 
 
 def gen_gateway(domain_list, data):
     yield header_t.strip('\n')
+    dot = data["dot"]
     for domain in domain_list:
-        yield format(entry_t, domain=domain, sanitized_name=domain.replace(".", "-"))
+        if domain != "":
+            domain = pyunycode.convert(domain)
+            sanitized_domain=domain.replace(".", dot)
+            yield format(entry_t, domain=domain, sanitized_domain=sanitized_domain)
 
 
 def gen_gateway_collector(domain_list, data):
@@ -183,7 +189,9 @@ def parse_tokens(input_str):
 
 def generate(args):
 
-    data = {}
+    data = {
+        "dot": args.dot
+    }
 
     resources = parse_tokens(args.resources)
 
@@ -224,6 +232,7 @@ if __name__ == "__main__":
     parser.add_argument("--resources", type=str, default='namespace,secret,issuer,certificates,gateway', help='generate type of resource')
     parser.add_argument("--email", type=str, help='email for ACME account')
     parser.add_argument("--api_token", type=str, help='API-TOKEN from Cloudflare account')
+    parser.add_argument("--dot", type=str, default='-dot-', help='replace dot to this')
     parser.add_argument("-o", type=str, help='output file name')
     args = parser.parse_args()
     generate(args)

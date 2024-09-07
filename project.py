@@ -1,5 +1,6 @@
 from string import Template
 import argparse
+import pyunycode
 
 separator = "---"
 
@@ -9,9 +10,9 @@ kind: Namespace
 metadata:
   labels:
     cos: ${cos}
-    kubernetes.io/metadata.name: ${cos}-${sanitized_name}
-    project: ${sanitized_name}
-  name: ${cos}-${sanitized_name}
+    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
+    project: ${sanitized_domain}
+  name: ${cos}-${sanitized_domain}
 """
 
 route_t = """
@@ -19,11 +20,13 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: http-route
-  namespace: ${cos}-${sanitized_name}
+  namespace: ${cos}-${sanitized_domain}
 spec:
   parentRefs:
   - name: external-https
     namespace:  gateway-infra
+  hostnames:
+  - www.${domain}
   rules:
   - matches:
     - path:
@@ -41,7 +44,7 @@ metadata:
   labels:
     app: default-app
   name: default-app
-  namespace: ${cos}-${sanitized_name}
+  namespace: ${cos}-${sanitized_domain}
 spec:
   ports:
   - port: 80
@@ -58,7 +61,7 @@ metadata:
   labels:
     app: default-app
   name: default-app
-  namespace: ${cos}-${sanitized_name}
+  namespace: ${cos}-${sanitized_domain}
 spec:
   replicas: 1
   selector:
@@ -90,7 +93,6 @@ def format(tmpl, data):
 
 
 def do_generate(resources, data):
-    data["sanitized_name"] = data["domain"].replace(".", "-")
 
     first = True
     for resource in resources:
@@ -120,7 +122,10 @@ def generate(args):
     domain = args.domain
     if domain == None:
         domain = input("Enter domain name: ")
+
+    domain = pyunycode.convert(domain)
     data["domain"] = domain
+    data["sanitized_domain"] = domain.replace(".", args.dot)
 
     outputFile = args.o
     if outputFile != None:
@@ -139,6 +144,7 @@ if __name__ == "__main__":
     parser.add_argument("--resources", type=str, default='namespace,route,service,deployment', help='generate type of resource')
     parser.add_argument("--cos", type=str, default='dev', help='class of service')
     parser.add_argument("--replicas", type=int, default=1, help='number of replicas')
+    parser.add_argument("--dot", type=str, default='-dot-', help='replace dot to this')
     parser.add_argument("-o", type=str, help='output file name')
     args = parser.parse_args()
     generate(args)
