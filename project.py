@@ -88,13 +88,41 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: html
+      volumes:
+      - name: html
+        persistentVolumeClaim:
+          claimName: ${cos}-${sanitized_domain}-pvc
+"""
+
+pvc_t = """
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ${cos}-${sanitized_domain}-pvc
+  namespace: ${cos}-${sanitized_domain}
+  labels:
+    app: default-app
+    cos: ${cos}
+    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
+    project: ${sanitized_domain}
+spec:
+  storageClassName: local-hostpath
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
 """
 
 resource_map = {
     "namespace": namespace_t,
     "route": route_t,
     "service": service_t,
-    "deployment": deployment_t
+    "deployment": deployment_t,
+    "pvc": pvc_t
 }
 
 
@@ -152,7 +180,7 @@ if __name__ == "__main__":
                     description='Gateway-infra project generator',
                     epilog='Copyright (C) Karagatan, LLC.')
     parser.add_argument("--domain", type=str, help='domain name')
-    parser.add_argument("--resources", type=str, default='namespace,route,service,deployment', help='generate type of resource')
+    parser.add_argument("--resources", type=str, default='namespace,route,service,deployment,pvc', help='generate type of resource')
     parser.add_argument("--cos", type=str, default='prod', help='class of service')
     parser.add_argument("--replicas", type=int, default=1, help='number of replicas')
     parser.add_argument("--dot", type=str, default='-dot-', help='replace dot to this')
