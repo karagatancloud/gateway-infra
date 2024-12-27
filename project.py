@@ -21,6 +21,10 @@ kind: HTTPRoute
 metadata:
   name: http-route
   namespace: ${cos}-${sanitized_domain}
+  labels:
+    cos: ${cos}
+    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
+    project: ${sanitized_domain}
 spec:
   parentRefs:
   - name: external-https
@@ -41,10 +45,13 @@ service_t = """
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: default-app
   name: default-app
   namespace: ${cos}-${sanitized_domain}
+  labels:
+    app: default-app
+    cos: ${cos}
+    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
+    project: ${sanitized_domain}
 spec:
   ports:
   - port: 80
@@ -58,10 +65,13 @@ deployment_t = """
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: default-app
   name: default-app
   namespace: ${cos}-${sanitized_domain}
+  labels:
+    app: default-app
+    cos: ${cos}
+    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
+    project: ${sanitized_domain}
 spec:
   replicas: 1
   selector:
