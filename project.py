@@ -26,7 +26,7 @@ spec:
   - name: external-https
     namespace:  gateway-infra
   hostnames:
-  - www.${domain}
+  - ${subdomain}.${domain}
   rules:
   - matches:
     - path:
@@ -125,6 +125,7 @@ def generate(args):
 
     domain = pyunycode.convert(domain)
     data["domain"] = domain
+    data["subdomain"] = "www" if args.cos == "prod" else args.cos
     data["sanitized_domain"] = domain.replace(".", args.dot)
 
     outputFile = args.o
