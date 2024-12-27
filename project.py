@@ -143,7 +143,7 @@ if __name__ == "__main__":
                     epilog='Copyright (C) Karagatan, LLC.')
     parser.add_argument("--domain", type=str, help='domain name')
     parser.add_argument("--resources", type=str, default='namespace,route,service,deployment', help='generate type of resource')
-    parser.add_argument("--cos", type=str, default='dev', help='class of service')
+    parser.add_argument("--cos", type=str, default='prod', help='class of service')
     parser.add_argument("--replicas", type=int, default=1, help='number of replicas')
     parser.add_argument("--dot", type=str, default='-dot-', help='replace dot to this')
     parser.add_argument("-o", type=str, help='output file name')
