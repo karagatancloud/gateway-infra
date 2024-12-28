@@ -72,8 +72,6 @@ kind: Gateway
 metadata:
   name: external-https
   namespace: gateway-infra
-  labels:
-    public-service: "true"
 spec:
   gatewayClassName: cilium
   listeners:
