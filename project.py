@@ -26,8 +26,10 @@ metadata:
     project: ${sanitized_domain}
 spec:
   parentRefs:
-  - name: external-https
-    namespace:  gateway-infra
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-https
+    namespace: gateway-infra
   hostnames:
   - ${subdomain}.${domain}
   rules:
