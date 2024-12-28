@@ -123,6 +123,7 @@ def gen_issuer(domain_list, data):
 
 
 def gen_certificates(domain_list, data):
+    dot = data["dot"]
     for domain in domain_list:
         if domain != "":
             domain = pyunycode.convert(domain)
