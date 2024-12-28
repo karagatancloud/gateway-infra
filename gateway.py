@@ -52,7 +52,7 @@ certificate_t = """
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: ${domain}
+  name: ${sanitized_domain}
   namespace: gateway-infra
 spec:
   # Common name to be used on the Certificate.
@@ -61,7 +61,7 @@ spec:
   dnsNames:
     - "${domain}"
     - "*.${domain}"
-  secretName: ${domain}-tls
+  secretName: ${sanitized_domain}-tls
   issuerRef:
     name: acme-cert-issuer
 """
@@ -80,7 +80,7 @@ spec:
 """
 
 entry_t = """
-  - name: https-w-${sanitized_domain}
+  - name: https-wildcard-${sanitized_domain}
     protocol: HTTPS
     port: 443
     hostname: "*.${domain}"
@@ -88,11 +88,12 @@ entry_t = """
       mode: Terminate
       certificateRefs:
       - kind: Secret
-        name: ${domain}-tls
+        name: ${sanitized_domain}-tls
         namespace: gateway-infra
     allowedRoutes:
       kinds:
       - kind: HTTPRoute
+      - kind: GRPCRoute
       namespaces:
         from: Selector
         selector:
@@ -106,11 +107,12 @@ entry_t = """
       mode: Terminate
       certificateRefs:
       - kind: Secret
-        name: ${domain}-tls
+        name: ${sanitized_domain}-tls
         namespace: gateway-infra
     allowedRoutes:
       kinds:
       - kind: HTTPRoute
+      - kind: GRPCRoute
       namespaces:
         from: Selector
         selector:
