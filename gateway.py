@@ -91,9 +91,6 @@ entry_t = """
         name: ${sanitized_domain}-tls
         namespace: gateway-infra
     allowedRoutes:
-      kinds:
-      - kind: HTTPRoute
-      - kind: GRPCRoute
       namespaces:
         from: Selector
         selector:
@@ -110,9 +107,6 @@ entry_t = """
         name: ${sanitized_domain}-tls
         namespace: gateway-infra
     allowedRoutes:
-      kinds:
-      - kind: HTTPRoute
-      - kind: GRPCRoute
       namespaces:
         from: Selector
         selector:
