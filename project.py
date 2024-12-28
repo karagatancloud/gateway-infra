@@ -23,7 +23,6 @@ metadata:
   namespace: ${cos}-${sanitized_domain}
   labels:
     cos: ${cos}
-    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
     project: ${sanitized_domain}
 spec:
   parentRefs:
@@ -50,7 +49,6 @@ metadata:
   labels:
     app: default-app
     cos: ${cos}
-    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
     project: ${sanitized_domain}
 spec:
   ports:
@@ -70,7 +68,6 @@ metadata:
   labels:
     app: default-app
     cos: ${cos}
-    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
     project: ${sanitized_domain}
 spec:
   replicas: 1
@@ -106,7 +103,6 @@ metadata:
   labels:
     app: default-app
     cos: ${cos}
-    kubernetes.io/metadata.name: ${cos}-${sanitized_domain}
     project: ${sanitized_domain}
 spec:
   storageClassName: local-hostpath
