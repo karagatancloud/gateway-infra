@@ -90,10 +90,7 @@ entry_t = """
         namespace: gateway-infra
     allowedRoutes:
       namespaces:
-        from: Selector
-        selector:
-          matchLabels:
-            project: ${sanitized_domain}
+        from: All
   - name: https-${sanitized_domain}
     protocol: HTTPS
     port: 443
@@ -106,10 +103,7 @@ entry_t = """
         namespace: gateway-infra
     allowedRoutes:
       namespaces:
-        from: Selector
-        selector:
-          matchLabels:
-            project: ${sanitized_domain}
+        from: All
 """
 
 def format(tmpl, **kwargs):
