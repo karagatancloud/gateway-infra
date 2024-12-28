@@ -177,6 +177,15 @@ def parse_tokens(input_str):
     return [x.strip() for x in input_str.split(',')]
 
 
+def convert_file_to_comma_separated(file_path):
+    with open(file_path, 'r') as file:
+        # Read all lines from the file, strip trailing newlines, and skip empty lines
+        lines = [line.strip() for line in file.readlines() if line.strip()]
+    # Join the non-empty lines with commas
+    result = ','.join(lines)
+    return result
+
+
 def generate(args):
 
     data = {
@@ -201,7 +210,9 @@ def generate(args):
 
     if "certificates" in resources or "gateway" in resources:
         domain_list = args.domains
-        if domain_list == None:
+        if domain_list == '' and args.domains_file != '':
+            domain_list = convert_file_to_comma_separated(args.domains_file)
+        if domain_list == '':
             domain_list = input("Enter comma separated domain list: ")
         domain_list = parse_tokens(domain_list)
 
@@ -218,7 +229,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='Gateway',
                     description='Gateway-infra gateway generator',
                     epilog='Copyright (C) Karagatan, LLC.')
-    parser.add_argument("--domains", type=str, help='comma separated domain list')
+    parser.add_argument("--domains", type=str, default='', help='comma separated domain list')
+    parser.add_argument("--domains_file", type=str, default='', help='file containing line separated domain list')
     parser.add_argument("--resources", type=str, default='namespace,secret,issuer,certificates,gateway', help='generate type of resource')
     parser.add_argument("--email", type=str, help='email for ACME account')
     parser.add_argument("--api_token", type=str, help='API-TOKEN from Cloudflare account')
