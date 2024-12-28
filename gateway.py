@@ -126,7 +126,8 @@ def gen_certificates(domain_list, data):
     for domain in domain_list:
         if domain != "":
             domain = pyunycode.convert(domain)
-            yield format(certificate_t, domain=domain)
+            sanitized_domain=domain.replace(".", dot)
+            yield format(certificate_t, domain=domain, sanitized_domain=sanitized_domain)
 
 
 def gen_gateway(domain_list, data):
