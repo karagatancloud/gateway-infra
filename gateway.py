@@ -207,7 +207,6 @@ def generate(args):
         data["api_token"] = api_token
 
     domain_list = []
-
     if "certificates" in resources or "gateway" in resources:
         domain_list = args.domains
         if domain_list == '' and args.domains_file != '':
